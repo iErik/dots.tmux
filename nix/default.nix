@@ -3,7 +3,8 @@ self: tmux-sessionx: { pkgs, lib, config, ... }: let
   inherit (lib.hm.dag) entryAfter;
   inherit (config.home) username homeDirectory;
 
-  sys = pkgs.system;
+  #sys = pkgs.system;
+  sys = stdenv.hostPlatform.system;
   cfg = config.dots.tmux;
   dotsDir = "${homeDirectory}/${cfg.directory}";
   xdgConfDir = "${homeDirectory}/.config/tmux";
@@ -56,6 +57,14 @@ in {
     programs.tmux = {
       enable = true;
       tmuxinator.enable = cfg.tmuxinator;
+      terminal = "tmux-256color";
+      escapeTime = 20;
+
+      extraConfig = ''
+        set -as terminal-overrides ',*:Tc'
+        set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'
+        set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'
+      '';
 
       plugins = [
         {
