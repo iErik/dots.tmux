@@ -1,4 +1,4 @@
-self: { pkgs, lib, config, tmux-sessionx, ... }: let
+self: tmux-sessionx: { pkgs, lib, config, ... }: let
   inherit (lib) mkOption mkIf types;
   inherit (lib.hm.dag) entryAfter;
   inherit (config.home) username homeDirectory;
