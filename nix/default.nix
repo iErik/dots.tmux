@@ -70,7 +70,7 @@ in {
       # TODO: Maybe this should go to the Fish flake?
       # But then where do we enable fzf?
       enableFishIntegration = true;
-      tmux.enableShellIntegrations = true;
+      tmux.enableShellIntegration = true;
     };
 
     home.activation.tmuxSetup = mkIf cfg.cloneConfig
