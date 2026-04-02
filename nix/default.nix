@@ -1,8 +1,9 @@
-self: { pkgs, lib, config, ... }: let
+self: { pkgs, lib, config, tmux-sessionx, ... }: let
   inherit (lib) mkOption mkIf types;
   inherit (lib.hm.dag) entryAfter;
   inherit (config.home) username homeDirectory;
 
+  sys = pkgs.system;
   cfg = config.dots.tmux;
   dotsDir = "${homeDirectory}/${cfg.directory}";
   xdgConfDir = "${homeDirectory}/.config/tmux";
@@ -47,9 +48,29 @@ in {
   };
 
   config = mkIf cfg.enable {
+    home.packages = [
+      pkgs.bat
+      pkgs.zoxide
+    ];
+
     programs.tmux = {
       enable = true;
       tmuxinator.enable = cfg.tmuxinator;
+
+      plugins = [
+        {
+          plugin = tmux-sessionx.packages.${sys}.default;
+          extraConfig = '''';
+        }
+      ];
+    };
+
+    programs.fzf = {
+      enable = true;
+      # TODO: Maybe this should go to the Fish flake?
+      # But then where do we enable fzf?
+      enableFishIntegration = true;
+      tmux.enableShellIntegrations = true;
     };
 
     home.activation.tmuxSetup = mkIf cfg.cloneConfig
