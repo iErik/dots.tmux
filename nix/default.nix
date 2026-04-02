@@ -3,13 +3,12 @@ self: { pkgs, lib, config, ... }: let
   inherit (lib.hm.dag) entryAfter;
   inherit (config.home) username homeDirectory;
 
-
-  cfg = config.dots.nvim;
+  cfg = config.dots.tmux;
   dotsDir = "${homeDirectory}/${cfg.directory}";
   xdgConfDir = "${homeDirectory}/.config/tmux";
   repoUrl = "git@github.com:iErik/dots.tmux.git";
 in {
-  options.dots.tmux= {
+  options.dots.tmux = {
     enable = mkOption {
       type = types.bool;
       default = false;
@@ -33,6 +32,13 @@ in {
         "user's home directory).";
     };
 
+    branch = mkOption {
+      type = types.str;
+      default = "master";
+      description =
+        "The branch of the dotfiles repository to be cloned";
+    };
+
     tmuxinator = mkOption {
       type = types.bool;
       default = true;
@@ -46,7 +52,7 @@ in {
       tmuxinator.enable = cfg.tmuxinator;
     };
 
-    home.activation.nvimSetup = mkIf cfg.cloneConfig
+    home.activation.tmuxSetup = mkIf cfg.cloneConfig
       (entryAfter ["writeBoundary"] ''
         export PATH=${pkgs.openssh}/bin:$PATH
         export PATH=${pkgs.git}/bin:$PATH
@@ -56,7 +62,7 @@ in {
 
         if [ -d "${dotsDir}/.git" ];
         then
-          cd ${dotsDir} && git pull origin master
+          cd ${dotsDir} && git pull origin ${cfg.branch}
         else
           rm -rf ${dotsDir}
           rm -rf ${xdgConfDir}
