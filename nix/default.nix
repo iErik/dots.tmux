@@ -1,7 +1,8 @@
-self: tmux-sessionx: { pkgs, stdenv, lib, config, ... }: let
+self: tmux-sessionx: { pkgs, lib, config, ... }: let
   inherit (lib) mkOption mkIf types;
   inherit (lib.hm.dag) entryAfter;
   inherit (config.home) username homeDirectory;
+  inherit (pkgs) stdenv;
 
   #sys = pkgs.system;
   sys = stdenv.hostPlatform.system;
