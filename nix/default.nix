@@ -64,7 +64,8 @@ in {
       keyMode = "vi";
       mouse = true;
 
-      extraConfig = builtins.readFile ../tmux.base.conf;
+      #extraConfig = builtins.readFile ../tmux.base.conf;
+      extraConfig = builtins.readFile ../tmux.conf;
 
       plugins = [
         {
