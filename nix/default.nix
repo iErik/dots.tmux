@@ -70,7 +70,9 @@ in {
       plugins = [
         {
           plugin = tmux-sessionx.packages.${sys}.default;
-          extraConfig = '''';
+          extraConfig = ''
+            set -g @sessionx-bind 'X'
+          '';
         }
       ];
     };
